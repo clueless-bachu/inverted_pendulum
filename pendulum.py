@@ -20,6 +20,9 @@ A11 = -1 * Km**2*Kg**2 / ((M - m*l/L)*R*r**2)
 A12 = -1*g*m*l / (L*(M - m*l/L))
 A31 = Km**2*Kg**2 / (M*(L - m*l/M)*R*r**2)
 A32 = g/(L-m*l/M)
+
+# Here the A and B matrices are the linearised form of the system about its equilibrium state. For this, we need to calculate the equilibrium of the state.
+
 A = matrix([
     [0, 1, 0, 0],
     [0, A11, A12, 0],
@@ -43,7 +46,15 @@ Q = matrix([
     [0, 0, 0, 1]
 ])
 
+## LQR is a control technique based on space-state model. We use the linearised model matrices A and B along with matrices Q and R. 
+## Q is a diagonal matrix which gives the relative importance to each element of the state. Here HIGHEST importance is given to Position and Angle
+## R is a 1X1 matrix which accounts for the limitations of the system
+## For more Information refer https://en.wikipedia.org/wiki/Linear%E2%80%93quadratic_regulator 
+## A better control law is the LQG. Here It is not required to find out the equilibrium state. The controller will find it automaticlaly
+
+
 (K, X, E) = lqr(A, B, Q, R);
+# K is the Gain factor we use to manipulate the input to the system so that it attains Stability. 
 
 def constrain(theta):
     theta = theta % (2*pi)
